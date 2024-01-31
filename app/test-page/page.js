@@ -6,8 +6,7 @@ import axios from 'axios';
 
 const TestPage = () => {
   const [recentLostItems, setRecentLostItems] = useState([]);
-  // const [counter,setCounter] = useState([3]);
-  // const [seccounter,setSeccounter] = useState([4]);
+
   
   useEffect(() => {
     const fetchRecentLostItems = async () => {
@@ -19,16 +18,12 @@ const TestPage = () => {
 
         setRecentLostItems(response.data.slice(response.data.length-1,response.data.length));
         
-        // setCounter(prevCounter => prevCounter + 1);
-        // setSeccounter(prevSeccounter => prevSeccounter + 1);
+       
         console.log(response.data.length);
       } catch (error) {
         console.error('Error fetching recent lost items:', error);
       }
     };
-
-    // Clear previous search results before fetching new ones
-
     fetchRecentLostItems();
   }, []);
 
