@@ -6,14 +6,22 @@ import axios from 'axios';
 
 const TestPage = () => {
   const [recentLostItems, setRecentLostItems] = useState([]);
-
+  // const [counter,setCounter] = useState([3]);
+  // const [seccounter,setSeccounter] = useState([4]);
+  
   useEffect(() => {
     const fetchRecentLostItems = async () => {
       try {
+
         setRecentLostItems([]);
 
         const response = await axios.get('http://localhost:8000/api/lostitems/recent');
-        setRecentLostItems(response.data);
+
+        setRecentLostItems(response.data.slice(response.data.length-1,response.data.length));
+        
+        // setCounter(prevCounter => prevCounter + 1);
+        // setSeccounter(prevSeccounter => prevSeccounter + 1);
+        console.log(response.data.length);
       } catch (error) {
         console.error('Error fetching recent lost items:', error);
       }

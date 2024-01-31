@@ -93,7 +93,7 @@ try {
 const getRecentLostItems = async (req, res, next) => {
   try {
     // const recentLostItems = await LostItem.find().sort({ date: -1 }).limit(1);
-    const recentLostItems = await LostItem.find().sort({ date: -1 }).limit(0);
+    const recentLostItems = await LostItem.find().limit(0);
 
     const foundItems = await FoundItem.find();
 
