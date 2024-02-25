@@ -25,13 +25,16 @@ const Navbar = () => {
   }
 
   return (
-    <header className="bg-black  text-white py-4">
+    <header className="bg-black  text-white py-8">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo on the left */}
         <div className="text-2xl font-bold">
-          <Link href="/home-page">
-          <span className="text-4xl font-bold mb-4 ml-10">LoFo</span>
-          </Link>
+          {/* <Link href="/home-page"> */}
+          {display && <Link href="/home-page" className="text-4xl font-bold mb-4 ml-10">
+            LoFo
+          </Link>}
+          {/* <span className="">LoFo</span> */}
+          {/* </Link> */}
         </div>
 
         {/* Navigation links on the right */}
@@ -74,5 +77,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
