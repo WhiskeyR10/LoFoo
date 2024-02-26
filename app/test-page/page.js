@@ -1,90 +1,98 @@
+
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import axios from 'axios';
 
-const TestPage = () => {
-  const [recentLostItems, setRecentLostItems] = useState([]);
+const LostItemSimilarity = () => {
+  const [data, setData] = useState(null); // Initialize with null/default
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  
   useEffect(() => {
-    const fetchRecentLostItems = async () => {
+    const fetchData = async () => {
+      setLoading(true); // Set loading to true before fetching data
       try {
-
-        setRecentLostItems([]);
-
-        const response = await axios.get('http://localhost:8000/api/lostitems/recent');
-
-        setRecentLostItems(response.data.slice(response.data.length-1,response.data.length));
-        
-       
-        console.log(response.data.length);
-      } catch (error) {
-        console.error('Error fetching recent lost items:', error);
+        const response = await axios.get("http://localhost:8000/api/lostitems/recent"); 
+        const data = response.data;
+        setData(data);
+      } catch (err) {
+        setError(err.message || "Error fetching data");
+      } finally {
+        setLoading(false); 
       }
     };
-    fetchRecentLostItems();
+
+    fetchData();
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="lost-item-similarity">
       <Navbar />
-      <main className="bg-gray-200 flex-grow flex items-center justify-center">
-        <div className="max-w-full w-full p-10 bg-gray-50 rounded-md shadow-md">
-          <h1 className="text-2xl font-bold mb-4">Recent Lost Items with Similarity Results</h1>
-
-          {recentLostItems.map(({ lostItem, similarityResults }) => (
-            <div key={lostItem._id} className="bg-white p-4 rounded-md shadow-md mb-4">
-              <div className="flex items-center">
-                <div className="w-1/3">
-                  {lostItem.images.map((image, index) => (
-                    <img key={index} src={`http://localhost:8000${image}`} alt={`Lost Item ${index + 1}`} className="max-w-full mt-4" />
+      <div className="container mx-auto py-8">
+        <h1 className="text-3xl font-bold text-center mb-6">Similarity Results</h1>
+        {loading && <p className="text-center">Loading results...</p>}
+        {error && <p className="text-center text-red-500">Error: {error}</p>}
+        {data && !loading && (
+          <div className="result-container">
+            <div className="lost-item-info">
+              <h2 className="text-xl font-bold mb-4"> Lost Item</h2>
+              <div className="bg-white shadow-md rounded-md p-4">
+                <ul>
+                  <li><strong>Name:</strong> {data.recentLostItems.name}</li>
+                  <li><strong>Color:</strong> {data.recentLostItems.color}</li>
+                  <li><strong>Category:</strong> {data.recentLostItems.category}</li>
+                  <li><strong>Description:</strong> {data.recentLostItems.description}</li>
+                </ul>
+                <div className="mt-4 flex flex-wrap">
+                  {data.recentLostItems.images.map((image, index) => (
+                    <img
+                      key={index}
+                      src={`http://localhost:8000${image}`}
+                      alt={`Lost Item ${index + 1}`}
+                      className="w-1/3 mb-2 mr-2"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/100x100';
+                      }}
+                    />
                   ))}
                 </div>
-                <div className="w-2/3 ml-4">
-                  <p className="text-lg font-bold">{lostItem.name}</p>
-                  <p>Color: {lostItem.color}</p>
-                  <p>Category: {lostItem.category}</p>
-                  <p>Brand: {lostItem.brand}</p>
-                  <p>Date Lost: {lostItem.date}</p>
-                  <p>Description: {lostItem.description}</p>
-                  {/* Add contact details here */}
-                </div>
               </div>
-
-              {/* Display similarity results */}
-              <h2 className="text-xl font-bold mt-4">Similarity Results</h2>
-              {similarityResults.map(({ foundItem, similarity }) => (
-                <div key={foundItem._id} className="mt-2">
-                  <p></p>
-                  <div className="flex items-center border rounded-lg overflow-hidden shadow-md">
-                    <div className="w-1/3">
-                      {foundItem.images.map((image, index) => (
-                        <img key={index} src={`http://localhost:8000${image}`} alt={`Found Item ${index + 1}`} className="max-w-full h-auto" />
+            </div>
+            <div className="found-items mt-6">
+              <h2 className="text-xl font-bold mb-4">Matching Found Items</h2>
+              <ul>
+                {data.results.map((result) => (
+                  <li key={result.foundItem._id} className="bg-white shadow-md rounded-md p-4 mb-4">
+                    <p><strong>Found Item:</strong> {result.foundItem.name}</p>
+                    <p><strong>Category:</strong> {result.foundItem.category}</p>
+                    <p><strong>Description:</strong> {result.foundItem.description}</p>
+                    <p><strong>Similarity:</strong> {(result.similarity * 100).toFixed(2)}%</p>            
+                    <div className="mt-2 flex flex-wrap">
+                      {result.foundItem.images.map((image, index) => (
+                        <img
+                          key={index}
+                          src={`http://localhost:8000${image}`}
+                          alt={`Found Item ${index + 1}`}
+                          className="w-1/3 mb-2 mr-2"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/100x100';
+                          }}
+                        />
                       ))}
                     </div>
-                    <div className="w-2/3 p-4">
-                      <p className="text-lg font-bold mb-2">{foundItem.name}</p>
-                      <p className="text-gray-600">Color: {foundItem.color}</p>
-                      <p className="text-gray-600">Category: {foundItem.category}</p>
-                      <p className="text-gray-600">Brand: {foundItem.brand}</p>
-                      <p className="text-gray-600">Date Lost: {foundItem.date}</p>
-                      <p className="text-gray-600 mb-4">Description: {foundItem.description}</p>
-                      <p>Matched rate: {similarity * 100 + "%"}</p>
-                      {/* Add contact details here */}
-                      <div className="flex items-center justify-between"></div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
-        </div>
-      </main>
+          </div>
+        )}
+        {data && !loading && data.length === 0 && <p className="text-center">No matching found items.</p>}  {/* Check for both data and length */}
+      </div>
       <Footer />
     </div>
   );
 };
 
-export default TestPage;
+export default LostItemSimilarity;

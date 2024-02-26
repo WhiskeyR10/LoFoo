@@ -28,7 +28,6 @@ const create = async (req, res, next) => {
         founditem,
       });
     } catch (err) {
-      // Pass error to the error handling middleware
       next(err);
     }
   };
