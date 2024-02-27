@@ -2,18 +2,13 @@ import Link from 'next/link';
 
 const LandingPage = () => {
   return (
-    <div className="bg-gradient-to-r bg-blue-400 text-white min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Lost & Found</h1>
-        <p className="text-lg mb-8">Helping you find what you've lost and return what you've found.</p>
-        {/* <Link href="/home-page">
-         Get Started
-        </Link> */}
-        <Link href="/login-page" style={{ border: '1px solid blue', padding: '4px' }}>
-  Get Started
-</Link>
-
-
+    <div className="bg-gradient-to-r from-gray-900 to-black text-white min-h-screen flex items-center justify-center">
+      <div className="px-8 text-center">
+        <h1 className="text-5xl font-bold mb-8">Lost Something? Find It Here!</h1>
+        <p className="text-xl mb-10">Our lost and found service helps you recover lost items.</p>
+        <Link href="/login-page" className="rounded-full bg-white text-black hover:bg-purple-400 py-3 px-6 font-semibold">
+          Get Started
+        </Link>
       </div>
     </div>
   );

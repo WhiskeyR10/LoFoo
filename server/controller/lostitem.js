@@ -1,9 +1,13 @@
 // controllers/lostitem.js
 const LostItem = require("../model/lostitem")
 const FoundItem = require("../model/FoundItem")
+const User = require("../model/User")
 const path = require("path")
-
+const transporter = require("../config/transporter")
 const  {ObjectId} = require("mongoose").Types;
+const mjml2html = require("mjml");
+const ejs = require("ejs");
+const fs = require("fs");
 
 // Tokenize and clean text
 function tokenizeAndClean(text) {
@@ -96,7 +100,7 @@ const getRecentLostItems = async (req, res, next) => {
     const recentLostItems = await LostItem.find().limit(0);
 
     const foundItems = await FoundItem.find();
-
+    console.log(foundItems, "foundItems");
     const results = recentLostItems.map((lostItem) => {
       const similarityResults = foundItems.map((foundItem) => ({
         foundItem,
@@ -120,7 +124,32 @@ const getRecentLostItems = async (req, res, next) => {
   }
 };
 
+const sendBill = async (req, res, next) => {
+  try {
+    const mjmlTemplate = fs.readFileSync(
+      path.resolve(__dirname, "../config/bill.mjml"),
+      "utf8"
+    ); 
+    const data = { text: req.body.textareaValue }; 
+    console.log(data)
+    const renderedMJML = ejs.render(mjmlTemplate,{data});
+    const { html } = mjml2html(renderedMJML);
+    console.log(req.body,'Body body');
+    const info = await transporter.sendMail({
+      from: `rukshanr10@gmail.com`,
+      to: `rukshanraut.076@kathford.edu.np`,
+      subject: "Your Invoice",
+      html: html, 
+    });
+    return res.status(200).json({message: "Invoice sent successfully"});
+  } catch (error) {
+    console.error("Error sending invoice:", error);
+    return res.status(500).json( error.message );
+  }
+}
+
 module.exports = {
   create,
   getRecentLostItems,
+  sendBill,
 };
