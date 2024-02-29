@@ -1,78 +1,63 @@
 'use client'
 
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
 import Navbar from '../components/Navbar';
-
 import Footer from '../components/Footer';
-
 import { useRouter } from 'next/navigation'
+import jwt_decode from 'jsonwebtoken';
 
 const FoundPage = () => {
-
   const router = useRouter();
 
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      setErrorMessage("Missing JWT token. Please log in.");
+    } else {
+      try {
+        jwt_decode(token);
+      } catch (error) {
+        setErrorMessage('Invalid JWT token. Please log in again.');
+      }
+    }
+  }, []);
 
 
   async function handleSubmit(event) {
 
     event.preventDefault();
 
-
-
     const formData = new FormData();
 
-
-
     formData.append('name', event.target.itemName.value);
-
     formData.append('color', event.target.color.value);
-
     formData.append('category', event.target.category.value);
-
     formData.append('brand', event.target.itemBrand.value);
-
     formData.append('date', event.target.itemDate.value);
-
     formData.append('time', event.target.itemTime.value);
-
     formData.append('images', event.target.itemImage.files[0]);
-
     formData.append('description', event.target.additionalInfo.value);
 
 
-
     try {
+        const headers = {
+          'Content-type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        };
 
-        const res = await axios.post('http://localhost:8000/api/findings', formData, {
-
-          headers: {
-
-            'Content-Type': 'multipart/form-data',
-
-          },
-
-        });
+        const res = await axios.post('http://localhost:8000/api/findings', formData, { headers });
 
         router.push('/home-page');
-
         console.log(res.data.founditem);
 
-        
-
       } catch (err) {
-
         console.error(err);
-
       }
 
     }
-
-
-
-
 
   return (
 
@@ -85,8 +70,6 @@ const FoundPage = () => {
         <div className="container mx-auto mt-8 mb-5 p-6 bg-white shadow-md rounded-md max-w-md mx-auto">
 
           <h1 className="text-3xl font-bold mb-8 text-center">Submit a Found Item</h1>
-
-
 
           <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
 

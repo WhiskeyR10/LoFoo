@@ -1,15 +1,32 @@
 
 'use client';
-import React from 'react';
+import React, { useEffect , useState} from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation'
+import jwt_decode from 'jsonwebtoken';
+
 
 
 const LostPage = () => {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log(token);
+    if(!token) {
+      setErrorMessage("Missing JWT token. Please log in.");
+    } else {
+      try {
+        jwt_decode(token);
+      } catch (error) {
+        setErrorMessage('Invalid JWT token. Please log in again.');
+      }
+    }
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -26,11 +43,13 @@ const LostPage = () => {
     formData.append('description', event.target.additionalInfo.value);
 
     try {
-        const res = await axios.post('http://localhost:8000/api/lostitems', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const headers = {
+          'Content-type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        };
+
+        const res = await axios.post('http://localhost:8000/api/lostitems', formData, { headers });
+
 
         router.push('/test-page');
         console.log(res.data.lostItem);
