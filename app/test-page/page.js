@@ -70,6 +70,7 @@ const TestPage = () => {
                     <img
                       key={index}
                       src={`http://localhost:8000${image}`}
+                      style = {{width:'100px'}}
                       alt={`Lost Item ${index + 1}`}
                       className="max-w-full mt-4"
                     />
@@ -94,6 +95,7 @@ const TestPage = () => {
                         <img
                           key={index}
                           src={`http://localhost:8000${image}`}
+                          style = {{width:'100px'}}
                           alt={`Found Item ${index + 1}`}
                           className="max-w-full h-auto"
                         />
