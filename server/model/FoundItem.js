@@ -33,10 +33,11 @@ const FoundItemSchema = new Schema(
       required: true,
     },
     created_by: {
-      type: ObjectId,
-      ref: "User",
+      type: mongoose.Schema.Types.ObjectId, // Use the correct type
+      ref: "User", // Reference the user model name
       required: true,
     },
+    
     similarity: {
       type: Number,
     },
