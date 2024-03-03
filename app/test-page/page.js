@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LostItemSimilarity = () => {
   const [data, setData] = useState(null);
@@ -16,6 +18,7 @@ const LostItemSimilarity = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      
       setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/api/lostitems/recent");
@@ -42,20 +45,33 @@ const LostItemSimilarity = () => {
 
   const handleSendButtonClick = async (userId, itemId) => {
     setShowForm(false);
+      toast.success('Email sent successfully!', {
+      hideProgressBar: true,
+      autoClose: 1000,
+      position: 'top-right'
+    });
+
+    const headers = {
+      'Content-type': 'multipart/form-data',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    };
+
     const response = await axios.post(
       "http://localhost:8000/api/lostitems/sendMail",
       {
         userId,
         itemId,
         textareaValue: contactFormData[itemId],
-      }
+      },{headers}
     );
     setContactFormData({ ...contactFormData, [itemId]: "" });
     // console.log(userId, itemId, contactFormData[itemId], "Datas found!");
+
   };
 
   return (
     <div className="lost-item-similarity">
+          <ToastContainer />
       <Navbar />
       <div className="container mx-auto py-8">
         <h1 className="text-3xl font-bold text-center mb-6">Similarity Results</h1>

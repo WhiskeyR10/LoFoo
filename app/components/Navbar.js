@@ -1,77 +1,93 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-const Navbar = () => {
-  const [display,setDisplay]=useState()
-  const router = useRouter()
-  useEffect(()=>{
-    const token= localStorage.getItem("token")
-    console.log(token,"Yoi token")
-    if(token){
-      setDisplay(true)
-    }
-    else{
-      setDisplay(false)
-    }
-  },[])
+"use client";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-  const logout =()=>{
-    console.log("Logout!")
-    localStorage.removeItem('token');
-    setDisplay(false)
-    router.push("login-page")
-  }
+const Navbar = () => {
+  const [display, setDisplay] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token, "Your token");
+    if (token) {
+      setDisplay(true);
+    } else {
+      setDisplay(false);
+    }
+  }, []);
+
+  const logout = () => {
+    console.log("Logout!");
+    localStorage.removeItem("token");
+    setDisplay(false);
+    router.push("login-page");
+  };
 
   return (
-    <header className="bg-black  text-white py-8">
-      <div className="container mx-auto flex items-center justify-between">
-        {/* Logo on the left */}
-        <div className="text-2xl font-bold">
-          {/* <Link href="/home-page"> */}
-          {display && <Link href="/home-page" className="text-4xl font-bold mb-4 ml-10">
-            LoFo
-          </Link>}
-          {/* <span className="">LoFo</span> */}
-          {/* </Link> */}
+    <header className="bg-gray-800">
+      {/* <nav className="bg-gray-800 border-b border-gray-900"> */}
+            <nav className="bg-gray-800 text-white shadow-md border border-gray-700 rounded-md">
+
+
+
+        <div className="container mx-auto flex flex-wrap justify-between items-center py-4 px-4">
+          <div className="flex items-center">
+            {display && (
+              <Link href="/home-page" className="text-gradient-to-r from-purple-500 to-pink-500 text-2xl font-bold ml-4 **font-playfair**">
+                LoFo
+              </Link>
+
+            )}
+          </div>
         </div>
+      </nav>
 
-        {/* Navigation links on the right */}
-        <nav className="flex ml-auto space-x-4 ml-2 mr-8">
-
-          {display && <Link href="/home-page" className="hover:text-gray-300">
-            Home
-          </Link>}
-          <Link href="/about-page" className="hover:text-gray-300">
+      <nav className="bg-gray-50 py-3 pl-12 mx-auto px-4 flex justify-between items-center"> 
+      
+        <div className="flex flex-row items-center">
+          {display && (
+            <Link href="/home-page" className="text-gray-900 hover:underline mr-4">
+              Home
+            </Link>
+          )}
+          <Link href="/about-page" className="text-gray-900 hover:underline mr-4">
             About
           </Link>
-          <Link href="/contact-page" className="hover:text-gray-300">
+          <Link href="/contact-page" className="text-gray-900 hover:underline">
             Contact
           </Link>
-          <div className="relative group">
-            <Link href="/login-page" className="hover:text-gray-300">
+          <div className="relative ml-4 group">
+            <Link href="/login-page" className="text-gray-900 hover:underline">
               User
             </Link>
-            <ul className="hidden bg-white text-gray-800 border border-gray-300 rounded-md space-y-1 group-hover:block absolute top-full left-0">
+            <ul className="hidden bg-white text-gray-800 border border-gray-300 rounded-md space-y-1 group-hover:block absolute top-full right-0">
               <li>
-               {!display? <Link href="/login-page" className="block px-2 py-2 hover:bg-gray-100">
-                  Login
-                </Link>:
-                (<button onClick={logout} className="block px-2 py-2 hover:bg-gray-100">
-                  Logout
-                </button>)}
+                {!display ? (
+                  <Link
+                    href="/login-page"
+                    className="block px-2 py-2 hover:bg-gray-100"
+                  >
+                    Login
+                  </Link>
+                ) : (
+                  <button onClick={logout} className="block px-2 py-2 hover:bg-gray-100">
+                    Logout
+                  </button>
+                )}
               </li>
               <li>
-                <Link href="/register-page" className="block px-2 py-2 hover:bg-gray-100">
+                <Link
+                  href="/register-page"
+                  className="block px-2 py-2 hover:bg-gray-100"
+                >
                   Register
                 </Link>
               </li>
             </ul>
           </div>
-          {/* Add more links as needed */}
-        </nav>
-      </div>
+        </div>
+      </nav>
     </header>
   );
 };

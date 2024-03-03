@@ -80,19 +80,31 @@ const getRecentLostItems = async(req,res,next) => {
 };
 
 const sendMail = async (req, res, next) => {
+  const token = req.headers?.authorization?.split(" ")[1]
+  console.log(token);
+  if (!token) {
+    return res.status(401).send({ message: 'Unauthorized' });
+  }
+  const decoded = jwt.verify(token, 'WHISKY');
+      console.log(decoded);
+      const userId = decoded._id;
+      console.log(userId,"Message");
   try {
     const mjmlTemplate = fs.readFileSync(
       path.resolve(__dirname, "../config/mail.mjml"),
       "utf8"
     ); 
     const data = { text: req.body.textareaValue }; 
+    const foundDetails = await User.findById({_id: req.body.userId});
+    const lostDetails = await User.findById({_id: userId});
+    console.log(foundDetails,"Hello Mail!")
     console.log(data)
     const renderedMJML = ejs.render(mjmlTemplate,{data});
     const { html } = mjml2html(renderedMJML);
     console.log(req.body,'Body body');
     const info = await transporter.sendMail({
-      from: `rukshanr10@gmail.com`,
-      to: `rukshanraut.076@kathford.edu.np`,
+      from: lostDetails.email,
+      to: foundDetails.email,
       subject: "Result",
       html: html, 
     });
