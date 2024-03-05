@@ -1,23 +1,23 @@
-"use client";
-import React from "react";
+
+"use client"
+
+import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Link from "next/link";
-import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isAdminLogin, setIsAdminLogin] = useState(false); // New state for admin login
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("email", email);
-    console.log("passord", password);
 
     try {
       const response = await axios.post(
@@ -25,6 +25,7 @@ const LoginPage = () => {
         {
           email,
           password,
+          isAdminLogin, // Include isAdminLogin in request
         },
         {
           headers: {
@@ -38,7 +39,14 @@ const LoginPage = () => {
         const token = response.data.token;
         console.log({ message: "Login successful", token: token });
         localStorage.setItem("token", token);
-        router.push('home-page')
+
+        if (response.data.isAdmin) {
+          // Redirect to admin dashboard if user is admin
+          router.push("/admin-page");
+        } else {
+          // Redirect to normal user home page otherwise
+          router.push("/home-page");
+        }
       } else {
         console.error("Login failed");
       }
@@ -56,6 +64,19 @@ const LoginPage = () => {
         <div className="max-w-md w-full p-10 bg-gray-50 rounded-md shadow-md">
           <h2 className="text-3xl font-semibold mb-6 text-center">Login</h2>
           <form className="space-y-4" onSubmit={handleSubmit}>
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="isAdminLogin"
+                name="isAdminLogin"
+                checked={isAdminLogin}
+                onChange={(e) => setIsAdminLogin(e.target.checked)}
+                className="mr-2"
+              />
+              <label htmlFor="isAdminLogin" className="block text-gray-700">
+                Admin Login
+              </label>
+            </div>
             <div>
               <label htmlFor="email" className="block text-gray-700">
                 Email
@@ -89,13 +110,19 @@ const LoginPage = () => {
             >
               {loading ? "Logging in..." : "Login"}
             </button>
-            {/* </Link> */}
           </form>
           <p className="mt-4 text-gray-600 text-center">
             Don't have an account?{" "}
-            <Link href="/register-page" style={{ color: "blue" }}>
+            <Link href="/register-page" style={{ color:"blue" }}>
               Register here
             </Link>
+          </p>
+          <p className="mt-4 text-gray-600 text-center">
+            {isAdminLogin && ( // Render the link only if isAdminLogin is true
+              <Link href="/adminregister-page" style={{ color: "blue" }}>
+                Register as Admin
+              </Link>
+            )}
           </p>
         </div>
       </main>
@@ -105,4 +132,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

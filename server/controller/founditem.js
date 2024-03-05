@@ -33,7 +33,10 @@ const create = async (req, res, next) => {
         created_by: userId,
       });
 
-    
+      // const foundItemId = founditem._id;
+
+      // lostItemMatchingQueue.add({ foundItemId});
+
       res.status(201).json({
         message: "Found item created successfully",
         founditem,

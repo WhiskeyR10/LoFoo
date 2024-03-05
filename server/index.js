@@ -4,6 +4,8 @@ const WebSocket = require('ws');
 const fileUpload = require("express-fileupload")
 const path = require("path");
 
+
+
 require("./config/database");
 require("dotenv").config()
 
@@ -59,6 +61,7 @@ app.use(auth_routes);
 app.use(handleResourceNotFound);
 
 app.use(handleServerError);
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started at ${PORT}`);
