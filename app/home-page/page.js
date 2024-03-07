@@ -1,4 +1,4 @@
-
+"use client"
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -9,7 +9,6 @@ const HomePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
   
-
       <Navbar />
       <main className="flex-grow text-center py-16" style={{
       backgroundImage: `url(${bg.src})`,
@@ -46,4 +45,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

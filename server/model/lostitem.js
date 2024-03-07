@@ -6,7 +6,7 @@ const ObjectId = Schema.ObjectId;
 const LostItemSchema = new Schema(
   {
     name: {
-      type: String,
+      type: [String],
       required: true,
     },
     images: {

@@ -54,8 +54,11 @@ const Navbar = () => {
           <Link href="/about-page" className="text-gray-900 hover:underline mr-4">
             About
           </Link>
-          <Link href="/contact-page" className="text-gray-900 hover:underline">
+          <Link href="/contact-page" className="text-gray-900 hover:underline mr-4">
             Contact
+          </Link>
+          <Link href="/userprofile-page" className="text-gray-900 hover:underline">
+            Profile
           </Link>
           <div className="relative ml-4 group">
             <Link href="/login-page" className="text-gray-900 hover:underline">
