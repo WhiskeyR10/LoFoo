@@ -3,8 +3,8 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import BasePage from '../components/basePage';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/navigation";
@@ -127,7 +127,7 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
+          <BasePage>
       <div className="flex justify-center items-center mt-8">
         <div className="max-w-md w-full p-6 bg-white shadow-md rounded-md">
           {isLoading && <p className="text-center">Loading...</p>}
@@ -178,7 +178,7 @@ const UserProfile = () => {
           )}
         </div>
       </div>
-      <Footer />
+      </BasePage>
       <ToastContainer />
     </div>
   );

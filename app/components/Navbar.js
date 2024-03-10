@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,7 +9,6 @@ const Navbar = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(token, "Your token");
     if (token) {
       setDisplay(true);
     } else {
@@ -18,75 +17,90 @@ const Navbar = () => {
   }, []);
 
   const logout = () => {
-    console.log("Logout!");
-    localStorage.removeItem("token");
-    setDisplay(false);
-    router.push("login-page");
+    const confirmLogout = window.confirm("Do you want to logout?");
+    if (confirmLogout) {
+      localStorage.removeItem("token");
+      setDisplay(false);
+      router.push("/login-page");
+    }
   };
 
   return (
-    <header className="bg-gray-800">
-      {/* <nav className="bg-gray-800 border-b border-gray-900"> */}
-            <nav className="bg-gray-800 text-white shadow-md border border-gray-700 rounded-md">
-
-
-
+    <header className="">
+      <nav className=" text-white   border-gray-700 rounded-md">
         <div className="container mx-auto flex flex-wrap justify-between items-center py-4 px-4">
           <div className="flex items-center">
-            {display && (
-              <Link href="/home-page" className="text-gradient-to-r from-purple-500 to-pink-500 text-2xl font-bold ml-4 **font-playfair**">
+            {display ? (
+              <Link
+                href="/home-page"
+                className="text-gradient-to-r from-purple-500 to-pink-500 text-2xl font-bold ml-4 font-playfair"
+              >
                 LoFo
               </Link>
-
+            ) : (
+              <span className="pl-4 text-2xl font-bold font-playfair">
+                LoFo
+              </span>
             )}
           </div>
         </div>
       </nav>
 
-      <nav className="bg-gray-50 py-3 pl-12 mx-auto px-4 flex justify-between items-center"> 
-      
+      <nav className="shadow-md py-3 pl-12 mx-auto px-4 flex justify-between items-center">
         <div className="flex flex-row items-center">
           {display && (
-            <Link href="/home-page" className="text-gray-900 hover:underline mr-4">
+            <Link href="/home-page" className="text-white hover:underline mr-4">
               Home
             </Link>
           )}
-          <Link href="/about-page" className="text-gray-900 hover:underline mr-4">
+          <Link href="/about-page" className="text-white hover:underline mr-4">
             About
           </Link>
-          <Link href="/contact-page" className="text-gray-900 hover:underline mr-4">
+          <Link
+            href="/contact-page"
+            className="text-white hover:underline mr-4"
+          >
             Contact
           </Link>
-          <Link href="/userprofile-page" className="text-gray-900 hover:underline">
+          <Link href="/userprofile-page" className="text-white hover:underline">
             Profile
           </Link>
           <div className="relative ml-4 group">
-            <Link href="/login-page" className="text-gray-900 hover:underline">
-              User
-            </Link>
-            <ul className="hidden bg-white text-gray-800 border border-gray-300 rounded-md space-y-1 group-hover:block absolute top-full right-0">
+            {!display ? (
+              <Link href="/login-page" className="text-white hover:underline">
+                User
+              </Link>
+            ) : (
+              <button
+                onClick={logout}
+                className="text-white hover:underline"
+              >
+                Logout
+              </button>
+            )}
+            <ul className="hidden bg-white text-white border border-gray-300 rounded-md space-y-1 group-hover:block absolute top-full">
               <li>
                 {!display ? (
                   <Link
                     href="/login-page"
-                    className="block px-2 py-2 hover:bg-gray-100"
+                    className="block text-black px-2 py-2 hover:bg-gray-100"
                   >
                     Login
                   </Link>
                 ) : (
-                  <button onClick={logout} className="block px-2 py-2 hover:bg-gray-100">
-                    Logout
-                  </button>
+                  <></>
                 )}
               </li>
-              <li>
-                <Link
-                  href="/register-page"
-                  className="block px-2 py-2 hover:bg-gray-100"
-                >
-                  Register
-                </Link>
-              </li>
+              {!display && (
+                <li>
+                  <Link
+                    href="/register-page"
+                    className="block text-black px-2 py-2 hover:bg-gray-100"
+                  >
+                    Register
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -96,3 +110,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

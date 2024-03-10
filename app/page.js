@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
+
 const LandingPage = () => {
+  
   return (
     <div className="bg-gradient-to-r from-gray-900 to-black text-white min-h-screen flex items-center justify-center">
       <div className="px-8 text-center">

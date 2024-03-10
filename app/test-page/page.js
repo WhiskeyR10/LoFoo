@@ -1,8 +1,8 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import BasePage from '../components/basePage';
+
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -72,7 +72,7 @@ const LostItemSimilarity = () => {
   return (
     <div className="lost-item-similarity">
           <ToastContainer />
-      <Navbar />
+          <BasePage>
       <div className="container mx-auto py-8">
         <h1 className="text-3xl font-bold text-center mb-6">Similarity Results</h1>
         {loading && <p className="text-center">Loading results...</p>}
@@ -93,6 +93,7 @@ const LostItemSimilarity = () => {
                     <img
                       key={index}
                       src={`http://localhost:8000${image}`}
+                      style = {{width:'100px'}}
                       alt={`Lost Item ${index + 1}`}
                       className="w-1/3 mb-2 mr-2"
                       onError={(e) => {
@@ -117,6 +118,7 @@ const LostItemSimilarity = () => {
                         <img
                           key={index}
                           src={`http://localhost:8000${image}`}
+                          style = {{width:'100px'}}
                           alt={`Found Item ${index + 1}`}
                           className="w-1/3 mb-2 mr-2"
                           onError={(e) => {
@@ -125,11 +127,11 @@ const LostItemSimilarity = () => {
                         />
                       ))}
                       <button
-                        onClick={() => handleContactButtonClick(result.foundItem._id)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                      >
-                        Contact me
-                      </button>
+        onClick={() => handleContactButtonClick(result.lostItem._id)}
+        className=" top-0 mt-20 ml-20 right-0 bg-blue-500 text-black px-2 py-5 rounded hover:bg-blue-600 contact-button"
+      >
+        Contact me
+      </button>
                       {showForm && currentItemId === result.foundItem._id && (
                         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
                           <div className="bg-white p-6 rounded-md shadow-md relative">
@@ -180,7 +182,7 @@ const LostItemSimilarity = () => {
         )}
         {data && !loading && data.results.length === 0 && <p className="text-center">No matching found items.</p>}
       </div>
-      <Footer />
+      </BasePage>
     </div>
   );
 };

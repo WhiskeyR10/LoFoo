@@ -1,37 +1,63 @@
-"use client"
+"use client";
 import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+
 import Link from "next/link";
 
 const AdminHeader = () => {
-    const router= useRouter();
-
-    const handleLogout = async () => {
-        try {
-          localStorage.removeItem("token");
-          router.push('/login-page');
-        } catch (error) {
-          console.error(error);
-        }
-      };
-    
+  const router = useRouter();
+  const [display, setDisplay] = useState(false);
   
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token, "Your token");
+    if (token) {
+      setDisplay(true);
+    } else {
+      setDisplay(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    console.log("Logout!");
+    localStorage.removeItem("token");
+    setDisplay(false);
+    router.push("login-page");
+  };
+
   return (
-    <header className="bg-gray-800 py-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex-shrink-0">
-          <img src="/logo.png" alt="Lost and Found System Logo" className="h-10" />
+    <header className=" py-4">
+      <nav className=" text-white   border-gray-700 rounded-md">
+        <div className="container mx-auto flex flex-wrap justify-between items-center py-4 px-4">
+          <div className="flex items-center">
+            {display && (
+              <Link
+                href="/home-page"
+                className="text-gradient-to-r from-purple-500 to-pink-500 text-2xl font-bold ml-4 **font-playfair**"
+              >
+                LoFo
+              </Link>
+            )}
+          </div>
         </div>
-        <nav>
-          <ul className="flex text-white">
-            <li className="mr-4"><Link href="/">Home</Link></li>
-            <li className="mr-4"><Link href="/admin/dashboard">Dashboard</Link></li>
-            <li className="mr-4"><Link href="/admin-page/usermanagement-page">User Management</Link></li>
-            <li className="mr-4"><Link href="#">Reports</Link></li>
-            <li className="mr-4"><Link href="#">Settings</Link></li>
-            <li className="mr-4"><Link href="/login-page" onClick={handleLogout}>Logout</Link></li>
-          </ul>
-        </nav>
-      </div>
+      </nav>
+      <nav className="shadow-md py-3 pl-12 mx-auto px-4 flex justify-between items-center"> 
+  
+        <ul className="flex text-white">
+          {/* <li className="mr-4">
+            <Link href="/admin-page">Dashboard</Link>
+          </li> */}
+          <li className="mr-4">
+            <Link href="/admin-page/usermanagement-page">User Management</Link>
+          </li>
+
+          <li className="mr-4">
+            <Link href="/login-page" onClick={handleLogout}>
+              Logout
+            </Link>
+          </li>
+        </ul>
+      </nav>
     </header>
   );
 };

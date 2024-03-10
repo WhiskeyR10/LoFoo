@@ -10,3 +10,8 @@
   width: 98%;
 }
 
+.contact-button {
+  font-size: 0.75rem; 
+  width: 100px; 
+  height: 50px;
+}

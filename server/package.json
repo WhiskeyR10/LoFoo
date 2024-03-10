@@ -13,6 +13,7 @@
     "jsonwebtoken": "^9.0.2",
     "mjml": "^4.15.3",
     "mongoose": "^8.0.3",
+    "natural": "^6.10.5",
     "nodemailer": "^6.9.11",
     "nodemon": "^3.0.2",
     "react-toastify": "^10.0.4",

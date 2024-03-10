@@ -17,7 +17,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="bg-gray-800 text-white p-3 text-center  bottom-0 w-full">
+    <footer className=" text-white p-3 text-center  bottom-0 w-full shadow-top">
       <div className="container mx-auto">
         © 2024 {display ? <Link href="/home-page">LoFo</Link> : "LoFo"}. All rights reserved.
       </div>

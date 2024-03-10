@@ -18,10 +18,12 @@ function calculateCosineSimilarity(text1, text2) {
     const vector1 = Array.from(uniqueWords).map(word =>
       words1.includes(word) ? 1 : 0
     );
+    console.log(vector1,"Lost Item");
     const vector2 = Array.from(uniqueWords).map(word =>
       words2.includes(word) ? 1 : 0
     );
-  
+    console.log(vector2,"Found Item");
+
     let dotProduct = 0;
     let magnitude1 = 0;
     let magnitude2 = 0;

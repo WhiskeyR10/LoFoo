@@ -105,7 +105,7 @@ const sendMail = async (req, res, next) => {
     const info = await transporter.sendMail({
       from: lostDetails.email,
       to: foundDetails.email,
-      subject: "Result",
+      subject: "On regards to the posted found item",
       html: html, 
     });
     return res.status(200).json({message: "Mail sent successfully"});

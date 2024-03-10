@@ -1,0 +1,467 @@
+// "use client";
+// import React, { useState, useEffect } from "react";
+// import BasePage from "../components/basePage";
+
+// import axios from "axios";
+// import { toast, ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+
+// const FoundItemSimilarity = () => {
+//   const [data, setData] = useState(null);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+
+//   const [contactFormData, setContactFormData] = useState({});
+//   const [showForm, setShowForm] = useState(false);
+//   const [currentItemId, setCurrentItemId] = useState(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       setLoading(true);
+//       try {
+//         const response = await axios.get(
+//           "http://localhost:8000/api/findings/recent"
+//         );
+//         const data = response.data;
+//         setData(data);
+//       } catch (err) {
+//         setError(err.message || "Error fetching data");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
+//   const handleContactFormChange = (value) => {
+//     setContactFormData({ ...contactFormData, [currentItemId]: value });
+//   };
+
+//   const handleContactButtonClick = (itemId) => {
+//     setShowForm(true);
+//     setCurrentItemId(itemId);
+//   };
+
+//   const handleSendButtonClick = async (userId, itemId) => {
+//     setShowForm(false);
+//     toast.success("Email sent successfully!", {
+//       hideProgressBar: true,
+//       autoClose: 1000,
+//       position: "top-right",
+//     });
+
+//     const headers = {
+//       "Content-type": "multipart/form-data",
+//       Authorization: `Bearer ${localStorage.getItem("token")}`,
+//     };
+
+//     const response = await axios.post(
+//       "http://localhost:8000/api/findings/sendMail",
+//       {
+//         userId,
+//         itemId,
+//         textareaValue: contactFormData[itemId],
+//       },
+//       { headers }
+//     );
+//     setContactFormData({ ...contactFormData, [itemId]: "" });
+//     // console.log(userId, itemId, contactFormData[itemId], "Datas found!");
+//   };
+
+//   return (
+//     <div className="found-item-similarity">
+//       <ToastContainer />
+//       <BasePage>
+//         <div className="container mx-auto py-8">
+//           <h1 className="text-3xl text-white font-bold text-center mb-6">
+//             Similarity Results
+//           </h1>
+//           {loading && <p className="text-center">Loading results...</p>}
+//           {error && <p className="text-center text-red-500">Error: {error}</p>}
+//           {data && !loading && (
+//             <div className="result-container">
+//               <div className="lost-item-info">
+//                 <h2 className="text-xl text-white font-bold mb-4"> Found Item</h2>
+//                 <div className="bg-white shadow-md rounded-md p-4 w-full">
+//                 <div className="bg-gray-100 shadow-md rounded-md p-4 w-7/12">
+//                   <ul>
+//                     <li>
+//                       <strong>Name:</strong> {data.recentFoundItems.name}
+//                     </li>
+//                     <li>
+//                       <strong>Color:</strong> {data.recentFoundItems.color}
+//                     </li>
+//                     <li>
+//                       <strong>Category:</strong>{" "}
+//                       {data.recentFoundItems.category}
+//                     </li>
+//                     <li>
+//                       <strong>Description:</strong>{" "}
+//                       {data.recentFoundItems.description}
+//                     </li>
+//                   </ul>
+//                   <div className="mt-4 flex flex-wrap">
+//                     {data.recentFoundItems.images.map((image, index) => (
+//                       <img
+//                         key={index}
+//                         src={`http://localhost:8000${image}`}
+//                         style={{ width: "150px" }}
+//                         alt={`Found Item ${index + 1}`}
+//                         className="w-1/3 mb-2 mr-2"
+//                         onError={(e) => {
+//                           e.target.src = "https://via.placeholder.com/100x100";
+//                         }}
+//                       />
+//                     ))}
+//                   </div>
+//                 </div>
+//                 </div>
+//               </div>
+//               <div className="lost-items mt-6">
+//                 <h2 className="text-xl text-white font-bold mb-4">Matching Lost Items</h2>
+//                 <ul>
+//                   {data.results.map((result) => (
+               
+//                     <li
+//                       key={result.lostItem._id}
+//                       className="bg-white shadow-md rounded-md p-4 mb-4"
+                      
+//                     >
+//                       <p>
+//                         <strong>Lost Item:</strong> {result.lostItem.name}
+//                       </p>
+//                       <p>
+//                         <strong>Category:</strong> {result.lostItem.category}
+//                       </p>
+//                       <p>
+//                         <strong>Description:</strong>{" "}
+//                         {result.lostItem.description}
+//                       </p>
+//                       <p>
+//                         <strong>Similarity:</strong>{" "}
+//                         {(result.similarity * 100).toFixed(2)}%
+//                       </p>
+//                       <div className="mt-2 flex flex-wrap">
+//                         {result.lostItem.images.map((image, index) => (
+//                           <img
+//                             key={index}
+//                             src={`http://localhost:8000${image}`}
+//                             style={{ width: "150px" }}
+//                             alt={`Lost Item ${index + 1}`}
+//                             className="w-1/3 mb-2 mr-2"
+//                             onError={(e) => {
+//                               e.target.src =
+//                                 "https://via.placeholder.com/100x100";
+//                             }}
+//                           />
+//                         ))}
+
+//                         <button
+//         onClick={() => handleContactButtonClick(result.lostItem._id)}
+//         className=" top-0 mt-20 ml-20 right-0 bg-blue-500 text-black px-2 py-5 rounded hover:bg-blue-600 contact-button"
+//       >
+//         Contact me
+//       </button>
+
+//                         {showForm && currentItemId === result.lostItem._id && (
+//                           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+//                             <div className="bg-white p-6 rounded-md shadow-md relative">
+//                               <button
+//                                 onClick={() => setShowForm(false)}
+//                                 className="absolute top-0 right-0 m-2 text-gray-500 hover:text-gray-700"
+//                               >
+//                                 <svg
+//                                   xmlns="http://www.w3.org/2000/svg"
+//                                   className="h-6 w-6"
+//                                   fill="none"
+//                                   viewBox="0 0 24 24"
+//                                   stroke="currentColor"
+//                                 >
+//                                   <path
+//                                     strokeLinecap="round"
+//                                     strokeLinejoin="round"
+//                                     strokeWidth={2}
+//                                     d="M6 18L18 6M6 6l12 12"
+//                                   />
+//                                 </svg>
+//                               </button>
+//                               <label className="block mb-4">
+//                                 Your Message:
+//                                 <textarea
+//                                   value={
+//                                     contactFormData[result.lostItem._id] || ""
+//                                   }
+//                                   onChange={(e) =>
+//                                     handleContactFormChange(e.target.value)
+//                                   }
+//                                   rows="4"
+//                                   cols="50"
+//                                   className="w-full border rounded-md p-2"
+//                                 />
+//                               </label>
+//                               <button
+//                                 onClick={() =>
+//                                   handleSendButtonClick(
+//                                     result.lostItem.created_by,
+//                                     result.lostItem._id
+//                                   )
+//                                 }
+//                                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+//                               >
+//                                 Send
+//                               </button>
+//                             </div>
+//                           </div>
+//                         )}
+//                       </div>
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+//             </div>
+//           )}
+//           {data && !loading && data.results.length === 0 && (
+//             <p className="text-center">No matching Lost items.</p>
+//           )}
+//         </div>
+//       </BasePage>
+//     </div>
+//   );
+// };
+
+// export default FoundItemSimilarity;
+
+"use client";
+import React, { useState, useEffect } from "react";
+import BasePage from "../components/basePage";
+
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const FoundItemSimilarity = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const [contactFormData, setContactFormData] = useState({});
+  const [showForm, setShowForm] = useState(false);
+  const [currentItemId, setCurrentItemId] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/findings/recent"
+        );
+        const data = response.data;
+        setData(data);
+      } catch (err) {
+        setError(err.message || "Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleContactFormChange = (value) => {
+    setContactFormData({ ...contactFormData, [currentItemId]: value });
+  };
+
+  const handleContactButtonClick = (itemId) => {
+    setShowForm(true);
+    setCurrentItemId(itemId);
+  };
+
+  const handleSendButtonClick = async (userId, itemId) => {
+    setShowForm(false);
+    toast.success("Email sent successfully!", {
+      hideProgressBar: true,
+      autoClose: 1000,
+      position: "top-right",
+    });
+
+    const headers = {
+      "Content-type": "multipart/form-data",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+
+    const response = await axios.post(
+      "http://localhost:8000/api/findings/sendMail",
+      {
+        userId,
+        itemId,
+        textareaValue: contactFormData[itemId],
+      },
+      { headers }
+    );
+    setContactFormData({ ...contactFormData, [itemId]: "" });
+    // console.log(userId, itemId, contactFormData[itemId], "Datas found!");
+  };
+
+  return (
+    <div className="found-item-similarity">
+      <ToastContainer />
+      <BasePage>
+        <div className="container mx-auto py-8">
+          <h1 className="text-3xl text-white font-bold text-center mb-6">
+            Similarity Results
+          </h1>
+          {loading && <p className="text-center">Loading results...</p>}
+          {error && <p className="text-center text-red-500">Error: {error}</p>}
+          {data && !loading && (
+            <div className="result-container">
+              <div className="lost-item-info">
+                <h2 className="text-xl text-white font-bold mb-4"> Found Item</h2>
+                <div className="bg-white shadow-md rounded-md p-4 w-full">
+                <div className="bg-gray-100 shadow-md rounded-md p-4 w-7/12">
+                  <ul>
+                    <li>
+                      <strong>Name:</strong> {data.recentFoundItems.name}
+                    </li>
+                    <li>
+                      <strong>Color:</strong> {data.recentFoundItems.color}
+                    </li>
+                    <li>
+                      <strong>Category:</strong>{" "}
+                      {data.recentFoundItems.category}
+                    </li>
+                    <li>
+                      <strong>Description:</strong>{" "}
+                      {data.recentFoundItems.description}
+                    </li>
+                  </ul>
+                  <div className="mt-4 flex flex-wrap">
+                    {data.recentFoundItems.images.map((image, index) => (
+                      <img
+                        key={index}
+                        src={`http://localhost:8000${image}`}
+                        style={{ width: "150px" }}
+                        alt={`Found Item ${index + 1}`}
+                        className="w-1/3 mb-2 mr-2"
+                        onError={(e) => {
+                          e.target.src = "https://via.placeholder.com/100x100";
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                </div>
+              </div>
+              <div className="lost-items mt-6">
+                <h2 className="text-xl text-white font-bold mb-4">Matching Lost Items</h2>
+                <ul>
+                  {data.results.map((result) => (
+               
+                    <li
+                      key={result.lostItem._id}
+                      className="bg-white shadow-md rounded-md p-4 mb-4"
+                      
+                    >
+                      <p>
+                        <strong>Lost Item:</strong> {result.lostItem.name}
+                      </p>
+                      <p>
+                        <strong>Category:</strong> {result.lostItem.category}
+                      </p>
+                      <p>
+                        <strong>Description:</strong>{" "}
+                        {result.lostItem.description}
+                      </p>
+                      <p>
+                        <strong>Similarity:</strong>{" "}
+                        {(result.similarity * 100).toFixed(2)}%
+                      </p>
+                      <div className="mt-2 flex flex-wrap">
+                        {result.lostItem.images.map((image, index) => (
+                          <img
+                            key={index}
+                            src={`http://localhost:8000${image}`}
+                            style={{ width: "150px" }}
+                            alt={`Lost Item ${index + 1}`}
+                            className="w-1/3 mb-2 mr-2"
+                            onError={(e) => {
+                              e.target.src =
+                                "https://via.placeholder.com/100x100";
+                            }}
+                          />
+                        ))}
+
+                        <button
+        onClick={() => handleContactButtonClick(result.lostItem._id)}
+        className=" top-0 mt-20 ml-20 right-0 bg-blue-500 text-black px-2 py-5 rounded hover:bg-blue-600 contact-button"
+      >
+        Contact me
+      </button>
+
+                        {showForm && currentItemId === result.lostItem._id && (
+                          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                            <div className="bg-white p-6 rounded-md shadow-md relative">
+                              <button
+                                onClick={() => setShowForm(false)}
+                                className="absolute top-0 right-0 m-2 text-gray-500 hover:text-gray-700"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-6 w-6"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              </button>
+                              <label className="block mb-4">
+                                Your Message:
+                                <textarea
+                                  value={
+                                    contactFormData[result.lostItem._id] || ""
+                                  }
+                                  onChange={(e) =>
+                                    handleContactFormChange(e.target.value)
+                                  }
+                                  rows="4"
+                                  cols="50"
+                                  className="w-full border rounded-md p-2"
+                                />
+                              </label>
+                              <button
+                                onClick={() =>
+                                  handleSendButtonClick(
+                                    result.lostItem.created_by,
+                                    result.lostItem._id
+                                  )
+                                }
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                              >
+                                Send
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+          {data && !loading && data.results.length === 0 && (
+            <p className="text-center">No matching Lost items.</p>
+          )}
+        </div>
+      </BasePage>
+    </div>
+  );
+};
+
+export default FoundItemSimilarity;

@@ -1,8 +1,8 @@
 
 "use client";
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import BasePage from '../components/basePage';
+
 import Link from 'next/link';
 import axios from 'axios';
 import {useRouter} from 'next/navigation';
@@ -42,8 +42,8 @@ const RegisterPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-    <Navbar />
-      <main className="bg-gray-200 flex-grow flex items-center justify-center">
+          <BasePage>
+      <main className=" flex-grow flex items-center justify-center">
         <div className="bg-gray-50 p-8 rounded shadow-md max-w-md w-full">
           <h2 className="text-3xl font-bold mb-4 text-center">Register</h2>
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -147,7 +147,7 @@ const RegisterPage = () => {
           </form>
         </div>
       </main>
-      <Footer />
+      </BasePage>
 
     </div>
   );
